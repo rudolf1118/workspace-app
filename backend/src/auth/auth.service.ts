@@ -4,6 +4,7 @@ import {UsersService} from "../users/users.service";
 import {JwtService} from "@nestjs/jwt";
 import { User } from '../users/schemas/users.schema'
 import { TokenService } from "./token/token.service"
+
 @Injectable()
 export class AuthService {
     constructor(private readonly usersService: UsersService, private readonly tokenService: TokenService,) {}
@@ -43,5 +44,4 @@ export class AuthService {
         }
         return this.generateToken(user);
     }
-
 }

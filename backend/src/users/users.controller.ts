@@ -9,7 +9,6 @@ export class UsersController {
     }
     @Get("getMe")
     async me(@Req() request) {
-        console.log(request)
         return this.userService.findUser(request.user.email);
     }
 }
