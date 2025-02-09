@@ -8,6 +8,7 @@ import {APP_FILTER} from "@nestjs/core";
 import configurations from "./configurations";
 import {ConfigModule} from "@nestjs/config";
 import {TokenModule} from "./auth/token/token.module";
+import { WorkspacesModule } from './workspaces/workspaces.module';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import {TokenModule} from "./auth/token/token.module";
           isGlobal: true,
           load: [configurations]
           }),
-    DatabaseModule, AuthModule, UsersModule, TokenModule],
+    DatabaseModule, AuthModule, UsersModule, TokenModule, WorkspacesModule],
   controllers: [],
   providers:[
   ]

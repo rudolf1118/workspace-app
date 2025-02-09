@@ -11,6 +11,11 @@ export interface LoginParams {
     password: string;
 }
 
+export interface WorkspaceParams {
+    name: string;
+    slug: string;
+}
+
 export interface AuthResponse {
     access_token: string;
     user_id: string;
@@ -24,4 +29,20 @@ export interface IAuthApi {
 export interface IAxiosConfig {
     w_auth: AxiosInstance | null;
     wo_auth: AxiosInstance | null;
+    baseURL: string;
+}
+
+export interface IWorkspaceAPI {
+    getWorkspaces(): Promise<Workspace[]>;
+    createWorkspace(workspace: Workspace): Promise<Workspace>;
+    getWorkspaceBySlug(slug: string): Promise<Workspace>;
+}
+
+export interface Workspace {
+    _id?: string;
+    id?: string;
+    name: string;
+    slug: string;
+    userId?: string;
+    createdAt?: Date;
 }

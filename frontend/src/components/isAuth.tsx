@@ -10,16 +10,15 @@ export default function isAuth(Component: any) {
 
         useEffect(() => {
             const checkAuth = async () => {
-                const valid = await isAuthenticated().then((res) => {
-                    setAuth(res);
-                });
+                const auth = await isAuthenticated();
+                setAuth(auth);
             };
             checkAuth();
         }, []);
 
         useEffect(() => {
             if (!auth) {
-                return redirect("/");
+                redirect("/login");
             }
         }, [auth]);
 
