@@ -1,7 +1,7 @@
-import {Body, Controller, Get, Header, HttpCode, HttpStatus, Post, UseGuards} from '@nestjs/common';
-import {UsersService} from "../users/users.service";
+import {Body, Controller, Get, HttpCode, HttpStatus, Post, UseGuards} from '@nestjs/common';
 import {AuthService} from "./auth.service";
 import { JwtAuthGuard } from './guards/auth.guard';
+import { InputType, RegisterType } from 'src/common/types';
 
 @Controller('auth')
 export class AuthController {
@@ -10,20 +10,20 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
 
     @Post('signup')
-    signup (@Body() input: any) {
+    signup (@Body() input: RegisterType) {
         return this.authService.register(input);
     }
 
     @Post("login")
-    login (@Body() input: any) {
+    login (@Body() input: InputType) {
         return this.authService.login(input);
     }
 
     @UseGuards(JwtAuthGuard)
     @Get("verify")
-    @Header("Authorization", "Bearer")
     verifyToken () {
         return {
+            statusCode: 200,
             message: "Token is valid"
         }
     }

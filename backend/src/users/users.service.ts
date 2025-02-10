@@ -33,4 +33,18 @@ export class UsersService {
         }
         return user;
     }
+
+    async verifyEmail (input: string) {
+        const user = await this.userModel.findOne({ email: input });
+        if(user) {
+            return {
+                statusCode: 400,
+                message: "Email is already used"
+            }
+        }
+        return {
+            statusCode: 200,
+            message: "Email is not used"
+        }
+    }
 }

@@ -1,15 +1,16 @@
 import {BadRequestException, Injectable, UnauthorizedException} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import {UsersService} from "../users/users.service";
-import {JwtService} from "@nestjs/jwt";
 import { User } from '../users/schemas/users.schema'
 import { TokenService } from "./token/token.service"
+import { TokenResponse } from 'src/common/interfaces';
+import { InputType, RegisterType } from 'src/common/types';
 
 @Injectable()
 export class AuthService {
-    constructor(private readonly usersService: UsersService, private readonly tokenService: TokenService,) {}
+    constructor(private readonly usersService: UsersService, private readonly tokenService: TokenService) {}
 
-    async generateToken (user: User) {
+    async generateToken (user: User): Promise<TokenResponse> {
         const payload = { sub: user._id, password: user.password, role: user.role, email: user.email};
         const generated = await this.tokenService.generateJwtToken(payload);
 
@@ -18,12 +19,12 @@ export class AuthService {
         }
 
         return {
-            user_id: user._id,
+            user_id: user._id as string,
             access_token: generated,
         }
     }
 
-    async register(candidate: any) {
+    async register(candidate: RegisterType): Promise<TokenResponse> {
         const { password, ...rest} = candidate;
         if (!password) {
             throw new BadRequestException();
@@ -33,7 +34,7 @@ export class AuthService {
         return this.generateToken(userCreating);
     }
 
-    async login (input:any) {
+    async login (input:InputType): Promise<TokenResponse> {
         const user = await this.usersService.findUser(input?.email);
         if (!user) {
             throw new UnauthorizedException();

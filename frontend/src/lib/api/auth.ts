@@ -1,7 +1,11 @@
 import { SignupParams, LoginParams, AuthResponse, IAuthApi } from "../interfaces";
 import { AxiosConfig } from "./axiosConfig";
 
-class AuthApi extends AxiosConfig implements IAuthApi {
+export class AuthApi extends AxiosConfig implements IAuthApi {
+
+    constructor() {
+        super();
+    }
 
     async signup(params: SignupParams): Promise<AuthResponse> {
         try {
@@ -19,6 +23,7 @@ class AuthApi extends AxiosConfig implements IAuthApi {
             if (!res || !res.data) throw new Error("Failed to login");
             if (res.data.access_token) {
                 localStorage.setItem("token", res.data.access_token);
+                this.init();
                 return res.data;
             }
             throw new Error("Failed to login");
@@ -30,15 +35,33 @@ class AuthApi extends AxiosConfig implements IAuthApi {
     async verifyToken(): Promise<boolean> {
         try {
             const token = localStorage.getItem("token");
-            if (!token) return false;
+            if (!token) return false;    
             const res = await this.w_auth?.get("/auth/verify");
             if (!res || !res.data) throw new Error("Failed to verify token");
-            if (res.data.message === "Token is valid") {
-                return true;
-            }
+
+            if(res.data.statusCode === 200) return true;
             return false;
         } catch(e) {
             return false;
+        }
+    }
+
+    async verifyEmail(email: string): Promise<{status: boolean, message: string}> {
+        try {
+            const res = await this.wo_auth?.post("/users/verify-email", {email});
+            if (!res || !res.data) throw new Error("Failed to verify email");
+            if (res.data.statusCode === 400) {
+                return {
+                    status: false,
+                    message: res.data.message
+                }
+            }
+            return {
+                status: true,
+                message: res.data.message
+            }
+        } catch(e) {
+            throw e;
         }
     }
 }

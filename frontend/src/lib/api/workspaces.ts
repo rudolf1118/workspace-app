@@ -9,10 +9,11 @@ class WorkspaceAPI extends AxiosConfig implements IWorkspaceAPI {
 
     async getWorkspaces(): Promise<Workspace[]> {
         try {
-            const res = await this.w_auth?.get(`/`);
+            const res = await this.w_auth?.get(''); 
             if (!res || !res.data) throw new Error("Failed to get workspaces");
             return res.data;
         } catch (error) {
+            console.log(error)
             throw new Error("Failed to get workspaces");
         }
     }

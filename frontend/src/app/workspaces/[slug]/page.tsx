@@ -12,7 +12,7 @@ const WorkspaceDetail = () => {
     const slug = params?.slug;
 
     const [workspace, setWorkspace] = useState<Workspace | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -32,7 +32,9 @@ const WorkspaceDetail = () => {
     }, [slug]);
 
     if (!workspace) {
-        return <div className="flex flex-col justify-center items-center font-bold text-xl">{error ? error : "Loading..."}</div>;
+        return <div className="flex flex-col justify-center items-center font-bold text-xl">
+            {error ? error : <div className="flex justify-center items-center h-[calc(100vh-200px)]">Loading...</div>}
+        </div>
     }
 
     const deleteWorkspace = async () => {
@@ -89,9 +91,12 @@ const WorkspaceDetail = () => {
                 </div>
                 <button 
                     type="button"
-                    className="bg-red-500 text-white px-3 py-1 text-sm rounded-md mt-3"
+                    className={`bg-red-500 text-white px-3 py-1 text-sm rounded-md mt-3 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     onClick={deleteWorkspace}
-                >Delete Workspace</button>
+                    disabled={isLoading}
+                >
+                    {isLoading ? 'Deleting...' : 'Delete Workspace'}
+                </button>
             </form>
         </div>
     );
