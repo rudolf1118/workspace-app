@@ -26,7 +26,7 @@ export class AuthApi extends AxiosConfig implements IAuthApi {
                 this.init();
                 return res.data;
             }
-            throw new Error("Failed to login");
+            throw new Error("Password or email is incorrect");
         } catch(e) {
             throw e;
         }

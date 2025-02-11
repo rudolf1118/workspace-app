@@ -3,14 +3,22 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { authApi } from "../../lib/api/auth";
 import { LoginParams } from "../../lib/interfaces";
+import { useState } from "react";
 
 export default function LoginPage() {
     const router = useRouter();
     const { register, handleSubmit, formState: { errors } } = useForm<LoginParams>();
+    const [error, setError] = useState<string | null>(null);
 
     async function onSubmit(data: LoginParams) {
-        const res = await authApi.login(data);
-        if (res.access_token) router.push("/workspaces");
+        let res;
+        try {
+            res = await authApi.login(data);
+        } catch (error) {
+            console.error("Login failed:", error);
+            setError("Password or email is incorrect");
+        }
+        if (res?.access_token) router.push("/");
     }
 
     return (
@@ -36,6 +44,7 @@ export default function LoginPage() {
                             className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 outline-none"
                         />
                         {errors.password && <p className="text-red-500 text-sm">{errors.password.message?.toString()}</p>}
+                        {error && <p className="text-red-500 text-sm">{error}</p>}
                     </div>
 
                     <button 
